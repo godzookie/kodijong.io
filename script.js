@@ -226,6 +226,8 @@ const CartManager = {
     
     // WhatsApp order with optimizations
     sendWhatsAppOrder: function() {
+        console.log('sendWhatsAppOrder called');
+        
         // Early return if cart empty
         const cart = this.getCart();
         if (cart.length === 0) {
@@ -233,20 +235,57 @@ const CartManager = {
             return false;
         }
         
-        // Get form values
-        const nameInput = document.getElementById('customer-name');
-        const phoneInput = document.getElementById('customer-phone');
-        const instructionsInput = document.getElementById('special-instructions');
+        // Debug: Log all input fields
+        console.log('All input fields on page:');
+        document.querySelectorAll('input, textarea').forEach(input => {
+            console.log(`- ${input.id || input.name || 'no-id'}: type="${input.type}", value="${input.value}"`);
+        });
+        
+        // Get form values with multiple fallback options
+        const nameInput = document.getElementById('customer-name') || 
+                         document.querySelector('input[placeholder*="name" i], input[placeholder*="Name" i]') ||
+                         document.querySelector('input[name="name"]') ||
+                         document.querySelector('#name');
+        
+        const phoneInput = document.getElementById('customer-phone') || 
+                          document.querySelector('input[placeholder*="phone" i], input[placeholder*="Phone" i]') ||
+                          document.querySelector('input[type="tel"]') ||
+                          document.querySelector('input[name="phone"]') ||
+                          document.querySelector('#phone');
+        
+        const instructionsInput = document.getElementById('special-instructions') || 
+                                 document.querySelector('textarea[placeholder*="instructions" i]') ||
+                                 document.querySelector('textarea[name="instructions"]');
+        
+        console.log('Name input found:', nameInput);
+        console.log('Phone input found:', phoneInput);
+        console.log('Instructions input found:', instructionsInput);
         
         const name = nameInput?.value.trim() || '';
         const phone = phoneInput?.value.trim() || '';
         const instructions = instructionsInput?.value.trim() || '';
         
+        console.log('Name:', name, 'Phone:', phone);
+        
         // Validate inputs
         if (!name || !phone) {
             this.showNotification('Please enter your name and phone number', 'error');
+            
+            // Highlight empty fields
+            if (!name && nameInput) {
+                nameInput.style.border = '2px solid red';
+                nameInput.focus();
+            } else if (!phone && phoneInput) {
+                phoneInput.style.border = '2px solid red';
+                if (name) phoneInput.focus();
+            }
+            
             return false;
         }
+        
+        // Clear any error highlighting
+        if (nameInput) nameInput.style.border = '';
+        if (phoneInput) phoneInput.style.border = '';
         
         // Phone validation
         const phoneRegex = /^(\+27|0)[1-9]\d{8}$/;
@@ -254,6 +293,10 @@ const CartManager = {
         
         if (!phoneRegex.test(cleanedPhone)) {
             this.showNotification('Please enter a valid South African phone number', 'error');
+            if (phoneInput) {
+                phoneInput.style.border = '2px solid red';
+                phoneInput.focus();
+            }
             return false;
         }
         
@@ -361,22 +404,29 @@ const CartManager = {
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/${businessPhone}?text=${encodedMessage}`;
         
+        console.log('Opening WhatsApp URL:', whatsappUrl);
+        
         // Open WhatsApp
         try {
-            const newWindow = window.open(whatsappUrl, '_blank');
-            if (!newWindow) {
-                this.showNotification('Please allow pop-ups to send the order', 'error');
-                return false;
+            const newWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+            if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                // Fallback: Try to open in same window if popup blocked
+                window.location.href = whatsappUrl;
+                setTimeout(() => {
+                    this.showNotification('Please allow pop-ups or click the link manually', 'error');
+                }, 1000);
             }
         } catch (error) {
-            this.showNotification('Could not open WhatsApp', 'error');
-            return false;
+            console.error('Error opening WhatsApp:', error);
+            // Direct fallback
+            window.location.href = whatsappUrl;
         }
         
         // Clear cart and form
         this.saveCart([]);
         this._updateCartCountImmediate();
         
+        // Clear form fields
         if (nameInput) nameInput.value = '';
         if (phoneInput) phoneInput.value = '';
         if (instructionsInput) instructionsInput.value = '';
@@ -390,12 +440,62 @@ const CartManager = {
 window.CartManager = CartManager;
 
 // ============================================
+// UNIVERSAL WHATSAPP BUTTON HANDLER
+// ============================================
+
+function initWhatsAppButton() {
+    const whatsappBtn = document.getElementById('whatsapp-btn');
+    
+    if (whatsappBtn) {
+        console.log('WhatsApp button found, attaching event listener');
+        
+        // Remove any existing listeners
+        const newBtn = whatsappBtn.cloneNode(true);
+        whatsappBtn.parentNode.replaceChild(newBtn, whatsappBtn);
+        
+        // Add click event listener
+        newBtn.addEventListener('click', function(e) {
+            console.log('WhatsApp button clicked');
+            e.preventDefault();
+            e.stopPropagation();
+            
+            try {
+                const result = CartManager.sendWhatsAppOrder();
+                console.log('sendWhatsAppOrder result:', result);
+            } catch (error) {
+                console.error('Error in WhatsApp button handler:', error);
+                CartManager.showNotification('Error processing order. Please try again.', 'error');
+            }
+            
+            return false;
+        });
+        
+        // Also handle Enter key on form fields
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && (e.target.matches('#customer-name, #customer-phone, #special-instructions') ||
+                                      e.target.matches('input[placeholder*="name" i], input[placeholder*="phone" i]'))) {
+                e.preventDefault();
+                const result = CartManager.sendWhatsAppOrder();
+                console.log('Enter key triggered sendWhatsAppOrder:', result);
+            }
+        });
+        
+    } else {
+        console.warn('WhatsApp button not found (id="whatsapp-btn")');
+        // Try again after a delay in case button loads dynamically
+        setTimeout(initWhatsAppButton, 1000);
+    }
+}
+
+// ============================================
 // MAIN PAGE LOGIC (index.html)
 // ============================================
 
 if (document.querySelector('.hero')) {
     // Performance optimized main page
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('Main page loaded');
+        
         // Use passive event listeners for better scrolling performance
         const passiveOptions = { passive: true };
         const activeOptions = { passive: false };
@@ -558,18 +658,8 @@ if (document.querySelector('.hero')) {
         if (elements.closeCartBtn) elements.closeCartBtn.addEventListener('click', cartControls.close);
         if (elements.backdrop) elements.backdrop.addEventListener('click', cartControls.close);
         
-        // ========== OPTIMIZED WHATSAPP ==========
-        if (elements.whatsappBtn) {
-            elements.whatsappBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const result = CartManager.sendWhatsAppOrder();
-                if (result) {
-                    updateCartDisplay();
-                    cartControls.close();
-                    scrollPositions.save();
-                }
-            });
-        }
+        // ========== INITIALIZE WHATSAPP BUTTON ==========
+        initWhatsAppButton();
         
         // ========== OPTIMIZED TAB HANDLING ==========
         if (elements.menuTabs.length > 0) {
@@ -719,6 +809,8 @@ if (document.querySelector('.hero')) {
 if (document.querySelector('.product-detail')) {
     // Performance optimized product page
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('Product detail page loaded');
+        
         // ========== PRODUCT DATA ==========
         const products = {
             'big-boss': {
@@ -819,7 +911,7 @@ if (document.querySelector('.product-detail')) {
             },
             'makhelwane': {
                 name: 'MAKHELWANE',
-                description: 'SLICES OF TOASTED BREAD, GREENS, EGG, CHEESE AND TANTALIZING SAUCES.(EXCLUDING THE DRINK)',
+                description: 'SLICES OF TOASTED BREAD, GREENS, EGG, CHEESE AND TANTALIZING SAUCES.(EXCLUDING THE DRink)',
                 price: 18,
                 image: 'ORDERING/ORDERING 3.jpg'
             },
@@ -914,19 +1006,26 @@ if (document.querySelector('.product-detail')) {
             const sauceRadios = document.querySelectorAll('input[name="sauce"]');
             const customSaucesDiv = document.getElementById('customSauces');
             
+            if (!sauceRadios.length || !customSaucesDiv) return;
+            
+            // Initialize sauce selection
+            sauceRadios.forEach(radio => {
+                if (radio.value === 'Custom' && radio.checked) {
+                    customSaucesDiv.classList.add('show');
+                }
+            });
+            
             // Add event listeners to sauce radio buttons
             sauceRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
-                    if (customSaucesDiv) {
-                        if (this.value === 'Custom') {
-                            customSaucesDiv.classList.add('show');
-                        } else {
-                            customSaucesDiv.classList.remove('show');
-                            // Uncheck all custom sauce checkboxes when not in custom mode
-                            document.querySelectorAll('input[name="custom-sauce"]').forEach(cb => {
-                                cb.checked = false;
-                            });
-                        }
+                    if (this.value === 'Custom') {
+                        customSaucesDiv.classList.add('show');
+                    } else {
+                        customSaucesDiv.classList.remove('show');
+                        // Uncheck all custom sauce checkboxes when not in custom mode
+                        document.querySelectorAll('input[name="custom-sauce"]').forEach(cb => {
+                            cb.checked = false;
+                        });
                     }
                 });
             });
@@ -997,110 +1096,150 @@ if (document.querySelector('.product-detail')) {
             updateTotalDisplay();
         }
         
-        // ========== OPTIMIZED PRODUCT CONTROLS ==========
-        // Single event delegation for all product controls
-        document.addEventListener('click', function(e) {
-            const target = e.target;
+        // ========== FIXED: QUANTITY CONTROLS ==========
+        function setupQuantityControls() {
+            const qtyMinus = document.querySelector('.qty-minus');
+            const qtyPlus = document.querySelector('.qty-plus');
+            const quantityInput = elements.quantityInput;
             
-            // Quantity controls
-            if (target === elements.qtyMinus || target === elements.qtyPlus) {
-                e.preventDefault();
-                const isPlus = target === elements.qtyPlus;
+            if (qtyMinus && qtyPlus && quantityInput) {
+                qtyMinus.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (currentQuantity > 1) {
+                        currentQuantity--;
+                        quantityInput.value = currentQuantity;
+                        updateTotalDisplay();
+                    }
+                });
                 
-                if (isPlus && currentQuantity < 10) {
-                    currentQuantity++;
-                } else if (!isPlus && currentQuantity > 1) {
-                    currentQuantity--;
-                }
+                qtyPlus.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (currentQuantity < 10) {
+                        currentQuantity++;
+                        quantityInput.value = currentQuantity;
+                        updateTotalDisplay();
+                    }
+                });
                 
-                if (elements.quantityInput) {
-                    elements.quantityInput.value = currentQuantity;
+                quantityInput.addEventListener('input', function() {
+                    let value = parseInt(this.value, 10);
+                    if (isNaN(value) || value < 1) value = 1;
+                    if (value > 10) value = 10;
+                    currentQuantity = value;
+                    this.value = value;
                     updateTotalDisplay();
-                }
-                return;
+                });
             }
-            
-            // Extra controls
-            if (target.classList.contains('extra-plus') || target.classList.contains('extra-minus')) {
-                e.preventDefault();
-                const name = target.dataset.name;
-                const price = parseFloat(target.dataset.price || 0);
-                const input = document.querySelector(`.extra-qty[data-name="${name}"]`);
-                if (!input) return;
-                
-                let value = parseInt(input.value, 10) || 0;
-                const isPlus = target.classList.contains('extra-plus');
-                
-                if (isPlus && value < 10) {
-                    value++;
-                } else if (!isPlus && value > 0) {
-                    value--;
-                }
-                
-                input.value = value;
-                updateExtra(name, price, value);
-                return;
-            }
-            
-            // Drink controls
-            if (target.classList.contains('drink-plus') || target.classList.contains('drink-minus')) {
-                e.preventDefault();
-                const name = target.dataset.name;
-                const price = parseFloat(target.dataset.price || 0);
-                const input = document.querySelector(`.drink-qty[data-name="${name}"]`);
-                if (!input) return;
-                
-                let value = parseInt(input.value, 10) || 0;
-                const isPlus = target.classList.contains('drink-plus');
-                
-                if (isPlus && value < 10) {
-                    value++;
-                } else if (!isPlus && value > 0) {
-                    value--;
-                }
-                
-                input.value = value;
-                updateDrink(name, price, value);
-            }
-        });
+        }
         
-        // Single input handler
-        document.addEventListener('input', function(e) {
-            const target = e.target;
-            
-            if (target.classList.contains('extra-qty')) {
-                const name = target.dataset.name;
-                const price = parseFloat(target.dataset.price || 0);
-                let value = parseInt(target.value, 10) || 0;
-                if (value < 0) value = 0;
-                if (value > 10) value = 10;
-                target.value = value;
+        // ========== FIXED: EXTRAS AND DRINKS CONTROLS FOR YOUR HTML STRUCTURE ==========
+        function setupExtrasAndDrinksControls() {
+            // Event delegation for extras
+            document.addEventListener('click', function(e) {
+                // Extra controls
+                if (e.target.classList.contains('extra-minus')) {
+                    e.preventDefault();
+                    const extraOption = e.target.closest('.extra-option');
+                    if (!extraOption) return;
+                    
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price || 0);
+                    const input = extraOption.querySelector('.extra-qty');
+                    if (!input) return;
+                    
+                    let value = parseInt(input.value, 10) || 0;
+                    if (value > 0) {
+                        value--;
+                        input.value = value;
+                        updateExtra(name, price, value);
+                    }
+                    return;
+                }
                 
-                updateExtra(name, price, value);
-                return;
-            }
-            
-            if (target.classList.contains('drink-qty')) {
-                const name = target.dataset.name;
-                const price = parseFloat(target.dataset.price || 0);
-                let value = parseInt(target.value, 10) || 0;
-                if (value < 0) value = 0;
-                if (value > 10) value = 10;
-                target.value = value;
+                if (e.target.classList.contains('extra-plus')) {
+                    e.preventDefault();
+                    const extraOption = e.target.closest('.extra-option');
+                    if (!extraOption) return;
+                    
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price || 0);
+                    const input = extraOption.querySelector('.extra-qty');
+                    if (!input) return;
+                    
+                    let value = parseInt(input.value, 10) || 0;
+                    if (value < 10) {
+                        value++;
+                        input.value = value;
+                        updateExtra(name, price, value);
+                    }
+                    return;
+                }
                 
-                updateDrink(name, price, value);
-                return;
-            }
+                // Drink controls
+                if (e.target.classList.contains('drink-minus')) {
+                    e.preventDefault();
+                    const drinkOption = e.target.closest('.drink-option');
+                    if (!drinkOption) return;
+                    
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price || 0);
+                    const input = drinkOption.querySelector('.drink-qty');
+                    if (!input) return;
+                    
+                    let value = parseInt(input.value, 10) || 0;
+                    if (value > 0) {
+                        value--;
+                        input.value = value;
+                        updateDrink(name, price, value);
+                    }
+                    return;
+                }
+                
+                if (e.target.classList.contains('drink-plus')) {
+                    e.preventDefault();
+                    const drinkOption = e.target.closest('.drink-option');
+                    if (!drinkOption) return;
+                    
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price || 0);
+                    const input = drinkOption.querySelector('.drink-qty');
+                    if (!input) return;
+                    
+                    let value = parseInt(input.value, 10) || 0;
+                    if (value < 10) {
+                        value++;
+                        input.value = value;
+                        updateDrink(name, price, value);
+                    }
+                }
+            });
             
-            if (target === elements.quantityInput) {
-                let value = parseInt(target.value, 10);
-                if (isNaN(value) || value < 1) value = 1;
-                if (value > 10) value = 10;
-                currentQuantity = value;
-                target.value = value;
-                updateTotalDisplay();
-            }
-        });
+            // Input handlers for extras and drinks
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('extra-qty')) {
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price || 0);
+                    let value = parseInt(e.target.value, 10) || 0;
+                    if (value < 0) value = 0;
+                    if (value > 10) value = 10;
+                    e.target.value = value;
+                    
+                    updateExtra(name, price, value);
+                    return;
+                }
+                
+                if (e.target.classList.contains('drink-qty')) {
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price || 0);
+                    let value = parseInt(e.target.value, 10) || 0;
+                    if (value < 0) value = 0;
+                    if (value > 10) value = 10;
+                    e.target.value = value;
+                    
+                    updateDrink(name, price, value);
+                }
+            });
+        }
         
         // Optimized extra/drink updates
         function updateExtra(name, price, quantity) {
@@ -1357,8 +1496,13 @@ if (document.querySelector('.product-detail')) {
         if (elements.closeCartBtn) elements.closeCartBtn.addEventListener('click', closeCart);
         if (elements.backdrop) elements.backdrop.addEventListener('click', closeCart);
         
+        // ========== INITIALIZE WHATSAPP BUTTON ==========
+        initWhatsAppButton();
+        
         // ========== INITIALIZE ==========
         loadProduct();
+        setupQuantityControls();
+        setupExtrasAndDrinksControls();
         CartManager.updateCartCount();
         updateCartDisplay();
         
@@ -1513,6 +1657,84 @@ if (!document.querySelector('#kodijong-styles')) {
             margin-left: 10px;
         }
         
+        /* FIXED: Responsive extras and drinks for your HTML structure */
+        .extras-list,
+        .drinks-list {
+            margin-top: var(--space-md);
+        }
+        
+        .extra-option,
+        .drink-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 215, 0, 0.1);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            transition: var(--transition-base);
+        }
+        
+        .extra-option:hover,
+        .drink-option:hover {
+            background: rgba(255,215,0,0.1);
+            border-color: var(--gold-yellow);
+        }
+        
+        .option-details {
+            flex: 1;
+            min-width: 0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .extra-name,
+        .drink-name {
+            display: block;
+            font-weight: 600;
+            color: var(--pure-white);
+            font-size: 0.95rem;
+            line-height: 1.3;
+            margin-bottom: 0.25rem;
+        }
+        
+        .extra-price,
+        .drink-price {
+            display: block;
+            color: var(--gold-yellow);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        
+        .option-controls {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        
+        /* Make buttons more touch-friendly on mobile */
+        .extra-minus,
+        .extra-plus,
+        .drink-minus,
+        .drink-plus {
+            min-width: 36px !important;
+            min-height: 36px !important;
+            padding: 0.25rem 0.5rem !important;
+            font-size: 0.9rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        
+        .extra-qty,
+        .drink-qty {
+            width: 50px !important;
+            min-height: 36px !important;
+            padding: 0.25rem !important;
+            font-size: 0.9rem !important;
+            text-align: center !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            border-color: var(--gold-yellow) !important;
+            color: var(--pure-white) !important;
+        }
+        
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .notification {
@@ -1529,12 +1751,308 @@ if (!document.querySelector('#kodijong-styles')) {
                 height: 50px;
                 min-width: 50px;
             }
+            
+            /* Responsive fixes for mobile */
+            .extra-option,
+            .drink-option {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding: 0.75rem;
+            }
+            
+            .option-details {
+                width: 100%;
+                margin-bottom: 0.75rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .extra-name,
+            .drink-name {
+                display: inline-block;
+                margin-bottom: 0;
+                font-size: 0.9rem;
+                max-width: 60%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            .extra-price,
+            .drink-price {
+                display: inline-block;
+                font-size: 0.9rem;
+                text-align: right;
+                flex-shrink: 0;
+            }
+            
+            .option-controls {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .extra-minus,
+            .extra-plus,
+            .drink-minus,
+            .drink-plus {
+                min-width: 42px !important;
+                min-height: 42px !important;
+                padding: 0.5rem !important;
+                font-size: 1rem !important;
+            }
+            
+            .extra-qty,
+            .drink-qty {
+                width: 60px !important;
+                min-height: 42px !important;
+                margin: 0 0.5rem !important;
+                font-size: 1rem !important;
+            }
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 576px) {
+            .extra-option,
+            .drink-option {
+                padding: 0.5rem;
+            }
+            
+            .extra-name,
+            .drink-name {
+                font-size: 0.85rem;
+                max-width: 55%;
+            }
+            
+            .extra-price,
+            .drink-price {
+                font-size: 0.85rem;
+            }
+            
+            .extra-minus,
+            .extra-plus,
+            .drink-minus,
+            .drink-plus {
+                min-width: 38px !important;
+                min-height: 38px !important;
+                padding: 0.4rem !important;
+            }
+            
+            .extra-qty,
+            .drink-qty {
+                width: 50px !important;
+                min-height: 38px !important;
+                margin: 0 0.25rem !important;
+            }
+            
+            /* For very long drink names */
+            .drink-name {
+                max-width: 50%;
+            }
+        }
+        
+        /* For long drink names on all screens */
+        .drink-name {
+            word-break: break-word;
+            white-space: normal;
+            line-height: 1.2;
+        }
+        
+        @media (min-width: 769px) {
+            .extra-option,
+            .drink-option {
+                padding: 0.75rem 1rem;
+            }
+            
+            .option-details {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 0;
+            }
+            
+            .extra-name,
+            .drink-name {
+                flex: 1;
+                margin-bottom: 0;
+                margin-right: 1rem;
+            }
+            
+            .extra-price,
+            .drink-price {
+                flex-shrink: 0;
+                text-align: right;
+                min-width: 60px;
+            }
+            
+            .option-controls {
+                flex-shrink: 0;
+            }
+        }
+        
+        /* Make sure the buttons don't get too small on desktop */
+        @media (min-width: 992px) {
+            .extra-minus,
+            .extra-plus,
+            .drink-minus,
+            .drink-plus {
+                min-width: 40px !important;
+                min-height: 40px !important;
+            }
+            
+            .extra-qty,
+            .drink-qty {
+                width: 60px !important;
+                min-height: 40px !important;
+            }
+        }
+        
+        /* Improve spacing between items */
+        .extras-list .extra-option:last-child,
+        .drinks-list .drink-option:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Hover effects for better UX */
+        .extra-minus:hover,
+        .extra-plus:hover,
+        .drink-minus:hover,
+        .drink-plus:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .extra-qty:focus,
+        .drink-qty:focus {
+            outline: 2px solid var(--gold-yellow);
+            outline-offset: 2px;
+        }
+        
+        /* Animation for quantity changes */
+        .extra-qty,
+        .drink-qty {
+            transition: all 0.2s ease;
+        }
+        
+        .extra-minus:active,
+        .extra-plus:active,
+        .drink-minus:active,
+        .drink-plus:active {
+            transform: scale(0.95);
+        }
+        
+        /* Ensure proper contrast for readability */
+        .extras-list h4,
+        .drinks-list h4 {
+            color: var(--gold-yellow);
+            font-size: 1.2rem;
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .extras-list h4 i,
+        .drinks-list h4 i {
+            color: var(--fire-red);
+            animation: iconPulse 2s infinite alternate;
+        }
+        
+        /* WhatsApp button specific styles */
+        #whatsapp-btn {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        #whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+        
+        #whatsapp-btn:active {
+            transform: translateY(0);
+        }
+        
+        #whatsapp-btn i {
+            font-size: 20px;
         }
     `;
     document.head.appendChild(style);
 }
 
-// Initialize cart count on all pages
+// ============================================
+// UNIVERSAL INITIALIZATION
+// ============================================
+
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded, initializing CartManager');
+    
+    // Initialize cart count
     CartManager.updateCartCount();
+    
+    // Initialize WhatsApp button
+    initWhatsAppButton();
+    
+    // Also try initialization after page fully loads
+    window.addEventListener('load', function() {
+        console.log('Page fully loaded, re-initializing WhatsApp button');
+        setTimeout(initWhatsAppButton, 500);
+    });
 });
+
+// Fallback: Try initializing WhatsApp button every 2 seconds for 10 seconds
+let initAttempts = 0;
+const maxInitAttempts = 5;
+const initInterval = setInterval(() => {
+    if (document.getElementById('whatsapp-btn')) {
+        console.log('WhatsApp button found via fallback interval');
+        initWhatsAppButton();
+        clearInterval(initInterval);
+    } else if (initAttempts >= maxInitAttempts) {
+        console.warn('WhatsApp button not found after multiple attempts');
+        clearInterval(initInterval);
+    }
+    initAttempts++;
+}, 2000);
+
+// ============================================
+// DEBUG HELPER FUNCTIONS
+// ============================================
+
+// Add debug helper to window for testing
+window.debugCart = function() {
+    console.log('=== CART DEBUG INFO ===');
+    console.log('Cart contents:', CartManager.getCart());
+    console.log('Cart count:', CartManager.getCart().reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0));
+    console.log('WhatsApp button:', document.getElementById('whatsapp-btn'));
+    console.log('Form fields:');
+    console.log('- Name:', document.getElementById('customer-name')?.value);
+    console.log('- Phone:', document.getElementById('customer-phone')?.value);
+    console.log('=== END DEBUG ===');
+};
+
+// Test function for WhatsApp button
+window.testWhatsApp = function() {
+    console.log('=== TESTING WHATSAPP BUTTON ===');
+    const btn = document.getElementById('whatsapp-btn');
+    if (btn) {
+        console.log('Button found, simulating click');
+        btn.click();
+    } else {
+        console.error('Button not found!');
+    }
+};
