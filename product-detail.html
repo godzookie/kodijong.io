@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - KODIJONG THE FOOD HUB</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand" href="index.html">
+                <h1 class="brand-title mb-0"><span class="brand-highlight">KODIJONG</span></h1>
+                <h2 class="brand-slogan mb-0">THE FOOD HUB</h2>
+            </a>
+            
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <!-- Nav Items -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#home">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#popular">
+                            <i class="fas fa-fire"></i> Popular
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#menu">
+                            <i class="fas fa-book-open"></i> Full Menu
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#contact">
+                            <i class="fas fa-clock"></i> Hours
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Cart -->
+                <div class="nav-cart ms-3">
+                    <button class="cart-icon btn btn-outline-warning position-relative" id="cartToggle">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Product Detail Section -->
+    <section class="product-detail py-5 mt-5">
+        <div class="container">
+            <!-- Back Button -->
+            <a href="index.html" class="back-btn mb-4">
+                <i class="fas fa-arrow-left"></i> Back to Menu
+            </a>
+
+            <!-- Product Content -->
+            <div class="product-content" id="productContent">
+                <div class="row">
+                    <!-- Product Image -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="product-image">
+                            <img src="ORDERING/ORDERING 10.jpg" class="img-fluid rounded" alt="Product image" id="productImage" />
+                        </div>
+                    </div>
+                    
+                    <!-- Product Info -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="product-info">
+                            <h2 class="product-title mb-3" id="productTitle">Product Name</h2>
+                            <p class="product-description mb-4" id="productDescription">Short description of the product goes here. Describe taste, ingredients, or highlights.</p>
+                            <p class="product-price mb-4" id="productPrice">R49.00</p>
+                            
+                            <!-- Product Options -->
+                            <div class="product-options">
+                                <!-- Greens -->
+                                <div class="mb-4">
+                                    <h4><i class="fas fa-leaf"></i> Greens</h4>
+                                    <div class="options-grid">
+                                       <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="greens" id="withGreens" value="Yes" checked>
+                                            <label class="form-check-label" for="withGreens">With Greens</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="greens" id="noGreens" value="No">
+                                            <label class="form-check-label" for="noGreens">No Greens</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sauce -->
+                                <div class="mb-4">
+    <h4><i class="fas fa-flask"></i> Sauce</h4>
+    <div class="options-grid">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sauce" id="noSauce" value="No Sauce" checked>
+            <label class="form-check-label" for="noSauce">No Sauce</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sauce" id="allSauces" value="All">
+            <label class="form-check-label" for="allSauces">All Sauces</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sauce" id="customSauce" value="Custom">
+            <label class="form-check-label" for="customSauce">Custom Selection</label>
+        </div>
+    </div>
+
+    <!-- Change id from "customSaucesSection" to "customSauces" to match JavaScript -->
+    <div class="custom-sauces mt-3" id="customSauces" style="display: none;">
+        <div class="card p-3">
+            <h6>Choose sauces:</h6>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="custom-sauce" value="Tomato Sauce" id="tomatoSauce">
+                        <label class="form-check-label" for="tomatoSauce">Tomato Sauce</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="custom-sauce" value="Chili Sauce" id="chiliSauce">
+                        <label class="form-check-label" for="chiliSauce">Chili Sauce</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="custom-sauce" value="BBQ Sauce" id="bbqSauce">
+                        <label class="form-check-label" for="bbqSauce">BBQ Sauce</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="custom-sauce" value="Mayo & Herbs" id="mayoHerbs">
+                        <label class="form-check-label" for="mayoHerbs">Mayo & Herbs</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="custom-sauce" value="Mango Salad (Atchaar)" id="atchaar">
+                        <label class="form-check-label" for="atchaar">Mango Salad (Atchaar)</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+                                <!-- Add Extras -->
+                                <div class="mb-4">
+                                    <h4><i class="fas fa-plus-circle"></i> Add Extras</h4>
+                                    <div class="extras-list">
+                                        <!-- Cheese -->
+                                        <div class="extra-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="extra-name">Cheese</span>
+                                                <span class="extra-price">R6</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning extra-minus" type="button" data-name="Cheese" data-price="6">-</button>
+                                                <input type="number" class="extra-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Cheese" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning extra-plus" type="button" data-name="Cheese" data-price="6">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="extra-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="extra-name">Fried Egg</span>
+                                                <span class="extra-price">R7</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning extra-minus" type="button" data-name="Fried Egg" data-price="7">-</button>
+                                                <input type="number" class="extra-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Fried Egg" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning extra-plus" type="button" data-name="Fried Egg" data-price="7">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="extra-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="extra-name">Avocado</span>
+                                                <span class="extra-price">R10</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning extra-minus" type="button" data-name="Avocado" data-price="10">-</button>
+                                                <input type="number" class="extra-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Avocado" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning extra-plus" type="button" data-name="Avocado" data-price="10">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="extra-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="extra-name">Vienna</span>
+                                                <span class="extra-price">R15</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning extra-minus" type="button" data-name="Vienna" data-price="15">-</button>
+                                                <input type="number" class="extra-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Vienna" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning extra-plus" type="button" data-name="Vienna" data-price="15">+</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Add other extras similarly -->
+                                        <!-- Bacon -->
+                                        <div class="extra-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="extra-name">Bacon</span>
+                                                <span class="extra-price">R15</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning extra-minus" type="button" data-name="Bacon" data-price="15">-</button>
+                                                <input type="number" class="extra-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Bacon" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning extra-plus" type="button" data-name="Bacon" data-price="15">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="extra-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="extra-name">Russian Sausage</span>
+                                                <span class="extra-price">R25</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning extra-minus" type="button" data-name="Russian Sausage" data-price="25">-</button>
+                                                <input type="number" class="extra-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Russian Sausage" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning extra-plus" type="button" data-name="Russian Sausage" data-price="25">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="extra-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="extra-name">Beef Burger Patty</span>
+                                                <span class="extra-price">R27</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning extra-minus" type="button" data-name="Beef Burger Patty" data-price="27">-</button>
+                                                <input type="number" class="extra-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Beef Burger Patty" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning extra-plus" type="button" data-name="Beef Burger Patty" data-price="27">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="extra-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="extra-name">Crispy Chicken Fillet</span>
+                                                <span class="extra-price">R30</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning extra-minus" type="button" data-name="Crispy Chicken Fillet" data-price="30">-</button>
+                                                <input type="number" class="extra-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Crispy Chicken Fillet" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning extra-plus" type="button" data-name="Crispy Chicken Fillet" data-price="30">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Add Drinks -->
+                                <div class="mb-4">
+                                    <h4><i class="fas fa-wine-bottle"></i> Add Drinks</h4>
+                                    <div class="drinks-list">
+                                        <!-- Coke 500ml -->
+                                        <div class="drink-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="drink-name">Coke 500ml</span>
+                                                <span class="drink-price">R15</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning drink-minus" type="button" data-name="Coke 500ml" data-price="15">-</button>
+                                                <input type="number" class="drink-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Coke 500ml" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning drink-plus" type="button" data-name="Coke 500ml" data-price="15">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="drink-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="drink-name">Fanta 500ml</span>
+                                                <span class="drink-price">R15</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning drink-minus" type="button" data-name="Fanta 500ml" data-price="15">-</button>
+                                                <input type="number" class="drink-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Fanta 500ml" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning drink-plus" type="button" data-name="Fanta 500ml" data-price="15">+</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="drink-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="drink-name">Sprite 500ml</span>
+                                                <span class="drink-price">R15</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning drink-minus" type="button" data-name="Sprite 500ml" data-price="15">-</button>
+                                                <input type="number" class="drink-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Sprite 500ml" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning drink-plus" type="button" data-name="Sprite 500ml" data-price="15">+</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="drink-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="drink-name">Spa Leta 500ml</span>
+                                                <span class="drink-price">R15</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning drink-minus" type="button" data-name="Spa Leta 500ml" data-price="15">-</button>
+                                                <input type="number" class="drink-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Spa Leta 500ml" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning drink-plus" type="button" data-name="Spa Leta 500ml" data-price="15">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="drink-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="drink-name">Pepsi</span>
+                                                <span class="drink-price">R12</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning drink-minus" type="button" data-name="Pepsi" data-price="12">-</button>
+                                                <input type="number" class="drink-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Pepsi" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning drink-plus" type="button" data-name="Pepsi" data-price="12">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="drink-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="drink-name">Flavoured Sparkling Water 500ml</span>
+                                                <span class="drink-price">R12</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning drink-minus" type="button" data-name="Flavoured Sparkling Water 500ml" data-price="12">-</button>
+                                                <input type="number" class="drink-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Flavoured Sparkling Water 500ml" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning drink-plus" type="button" data-name="Flavoured Sparkling Water 500ml" data-price="12">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="drink-option d-flex justify-content-between align-items-center mb-2">
+                                            <div class="option-details">
+                                                <span class="drink-name">Fruit Juice 300ml</span>
+                                                <span class="drink-price">R15</span>
+                                            </div>
+                                            <div class="option-controls">
+                                                <button class="btn btn-sm btn-outline-warning drink-minus" type="button" data-name="Fruit Juice 300ml" data-price="15">-</button>
+                                                <input type="number" class="drink-qty form-control form-control-sm text-center mx-1" style="width: 60px;" data-name="Fruit Juice 300ml" value="0" min="0" max="10" readonly />
+                                                <button class="btn btn-sm btn-outline-warning drink-plus" type="button" data-name="Fruit Juice 300ml" data-price="15">+</button>
+                                            </div>
+                                        </div>
+                                        <!-- Add other drinks similarly -->
+                                    </div>
+                                </div>
+
+                                <!-- Quantity -->
+                                <div class="mb-4">
+                                    <h4><i class="fas fa-sort-amount-up"></i> Quantity</h4>
+                                    <div class="quantity-selector d-flex align-items-center">
+                                        <button class="btn btn-outline-warning qty-control qty-minus" type="button">-</button>
+                                        <input type="number" class="modal-qty form-control text-center mx-2" style="width: 80px;" value="1" min="1" max="10" />
+                                        <button class="btn btn-outline-warning qty-control qty-plus" type="button">+</button>
+                                    </div>
+                                </div>
+
+                                <!-- Total and Add to Cart -->
+                                <div class="product-summary mt-4 p-4 rounded">
+                                    <div class="product-total d-flex justify-content-between align-items-center mb-3">
+                                        <span class="fs-5">Total:</span>
+                                        <span class="fs-3 fw-bold" id="modalTotalDisplay">R0.00</span>
+                                    </div>
+                                    <button class="add-to-cart btn btn-lg w-100" id="modalAddToCart">
+                                        <i class="fas fa-cart-plus"></i> Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Sidebar (Same as index.html) -->
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>Your Shopping Cart</h2>
+            <button class="close-btn" id="close-cart">&times;</button>
+        </div>
+        
+        <div class="cart-body">
+            <ul id="order-list"></ul>
+            <p class="mt-3"><b style="color: white;">Total:</b> <span id="total-price">0.00</span></p>
+            
+            <form id="order-form" class="mt-3">
+                <div class="mb-3">
+                    <label for="customer-name" class="form-label">Name:</label>
+                    <input type="text" class="form-control" id="customer-name" placeholder="Your Name" required />
+                </div>
+                <div class="mb-3">
+                    <label for="customer-phone" class="form-label">Phone Number:</label>
+                    <input type="tel" class="form-control" id="customer-phone" placeholder="Your Phone Number" required />
+                </div>
+                <div class="mb-3">
+                    <label for="special-instructions" class="form-label">Special Instructions / Custom Order:</label>
+                    <textarea class="form-control" id="special-instructions" rows="4" placeholder="Any special requests or order details..."></textarea>
+                </div>
+            </form>
+        </div>
+        
+        <div class="cart-footer">
+            <a id="whatsapp-btn" class="cta" target="_blank" rel="noopener noreferrer">Send Order on WhatsApp</a>
+        </div>
+    </div>
+    
+    <!-- Backdrop for mobile -->
+    <div class="backdrop" id="backdrop"></div>
+
+    <!-- Footer -->
+    <footer class="footer py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <h3>KODIJONG</h3>
+                        <div class="social-links d-flex gap-2 mt-3">
+                            <a href="https://www.facebook.com/p/Kodijong-100064306443083/" class="social-link facebook"><i class="fab fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/kodijongkota/" class="social-link instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.tiktok.com/@kodijong_" class="social-link tiktok"><i class="fab fa-tiktok"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="footer-links">
+                        <h4>Quick Links</h4>
+                        <a href="index.html#home" class="d-block mb-2">Home</a>
+                        <a href="index.html#popular" class="d-block mb-2">Popular Items</a>
+                        <a href="index.html#menu" class="d-block mb-2">Full Menu</a>
+                        <a href="index.html#contact" class="d-block">Contact</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="footer-contact">
+                        <h4>Order Now</h4>
+                        <p><i class="fas fa-phone"></i> +27 83 967 9365</p>
+                        <p><i class="fab fa-whatsapp"></i> WhatsApp Order</p>
+                        <p><i class="fas fa-clock"></i> Open Mon-Sat</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom text-center mt-5 pt-4 border-top">
+                <p>&copy; 2026 KODIJONG THE FOOD HUB. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KODIJONG THE FOOD HUB</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand" href="#home">
+                <h1 class="brand-title mb-0"><span class="brand-highlight">KODIJONG</span></h1>
+                <h2 class="brand-slogan mb-0">THE FOOD HUB</h2>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+            </button>
+            
+            <!-- Nav Items -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#popular">
+                            <i class="fas fa-fire"></i> Popular
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#menu">
+                            <i class="fas fa-book-open"></i> Full Menu
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">
+                            <i class="fas fa-clock"></i> Hours
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Cart -->
+                <div class="nav-cart ms-3">
+                    <button class="cart-icon btn btn-outline-warning position-relative" id="cartToggle">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-8 mx-auto text-center">
+                    <div class="hero-badge mb-4">🔥 KASI'S FAVORITE</div>
+                    <h1 class="hero-title display-3 fw-bold mb-4">
+                        EXPERIENCE THE <span class="hero-highlight">BEST KOTA</span> IN TOWN
+                    </h1>
+                    <p class="hero-subtitle lead mb-5">
+                        Fresh ingredients, bold flavors, authentic taste that brings the township to your plate!
+                    </p>
+                    <div class="hero-buttons d-flex flex-wrap justify-content-center gap-3">
+                        <a href="#menu" class="btn btn-primary btn-lg">
+                            <i class="fas fa-utensils"></i> View Full Menu
+                        </a>
+                        <a href="#popular" class="btn btn-outline-warning btn-lg">
+                            <i class="fas fa-star"></i> See Popular Items
+                        </a>
+                    </div>
+                    
+                    <!-- Features -->
+                    <div class="hero-features row justify-content-center mt-5">
+                        <div class="col-auto">
+                            <div class="feature d-flex align-items-center">
+                                <i class="fas fa-clock me-2"></i>
+                                <span>Opens until late</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="feature d-flex align-items-center">
+                                <i class="fas fa-leaf me-2"></i>
+                                <span>Fresh Ingredients</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Quick Access -->
+    <section class="categories py-5">
+        <div class="container">
+            <h2 class="section-title text-center mb-3">WHAT CRAVING?</h2>
+            <p class="section-subtitle text-center mb-5">Quick jump to your favorite category</p>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <a href="#menu" class="category-card text-decoration-none" data-category="kota">
+                        <div class="card h-100 border-0">
+                            <div class="card-body text-center py-5">
+                                <div class="category-icon mx-auto mb-4">
+                                    <i class="fas fa-bread-slice"></i>
+                                </div>
+                                <h3 class="card-title">KOTA</h3>
+                                <p class="card-text">Our Signature Specials</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-md-4">
+                    <a href="#menu" class="category-card text-decoration-none" data-category="burgers">
+                        <div class="card h-100 border-0">
+                            <div class="card-body text-center py-5">
+                                <div class="category-icon mx-auto mb-4">
+                                    <i class="fas fa-hamburger"></i>
+                                </div>
+                                <h3 class="card-title">BURGERS</h3>
+                                <p class="card-text">Juicy & Delicious</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-md-4">
+                    <a href="#menu" class="category-card text-decoration-none" data-category="sandwiches">
+                        <div class="card h-100 border-0">
+                            <div class="card-body text-center py-5">
+                                <div class="category-icon mx-auto mb-4">
+                                    <i class="fas fa-bread-slice"></i>
+                                </div>
+                                <h3 class="card-title">SANDWICHES</h3>
+                                <p class="card-text">Toasted Perfection</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Items -->
+    <section class="popular py-5" id="popular">
+        <div class="container">
+            <div class="section-header text-center mb-5">
+                <h2 class="section-title">🔥 POPULAR PICKS</h2>
+                <p class="section-subtitle">Customer favorites that never disappoint</p>
+            </div>
+            
+            <div class="row g-4">
+                <!-- Popular Item 1 -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="product-detail.html?product=skaftin" class="popular-item-link text-decoration-none">
+                        <div class="card h-100 border-0 popular-item">
+                            <div class="popular-badge position-absolute top-0 end-0 m-2">💥 TRENDING</div>
+                            <div class="popular-image">
+                                <img src="ORDERING/ORDERING 10.jpg" class="card-img-top" alt="SKAFTIN">
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">SKAFTIN</h3>
+                                <p class="card-text popular-desc">FRESH BREAD, GREENS, POLONY, EGG, SECRET SAUCES AND CHIPS.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="popular-price h4 mb-0">R25</div>
+                                    <div class="popular-order-btn">Order Now</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Popular Item 2 -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="product-detail.html?product=kasablanca" class="popular-item-link text-decoration-none">
+                        <div class="card h-100 border-0 popular-item">
+                            <div class="popular-badge position-absolute top-0 end-0 m-2">💥 TRENDING</div>
+                            <div class="popular-image">
+                                <img src="ORDERING/ORDERING 11.jpg" class="card-img-top" alt="KASABLANCA">
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">KASABLANCA</h3>
+                                <p class="card-text popular-desc">SLICES OF TOASTED BREAD, GREENS, EGG, CHEESE, VIENNA AND TANTALIZING SAUCES.(EXCLUDING THE DRINK)</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="popular-price h4 mb-0">R27</div>
+                                    <div class="popular-order-btn">Order Now</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Popular Item 3 -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="product-detail.html?product=nix-mapha" class="popular-item-link text-decoration-none">
+                        <div class="card h-100 border-0 popular-item">
+                            <div class="popular-badge position-absolute top-0 end-0 m-2">⭐ BESTSELLER</div>
+                            <div class="popular-image">
+                                <img src="ORDERING/ORDERING 8.jpg" class="card-img-top" alt="NIX MAPHA">
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">NIX MAPHA</h3>
+                                <p class="card-text popular-desc">FRESH BREAD, GREENS, POLONY, TANTALIZING SAUCES AND CHIPS.(EXCLUDING THE DRINK)</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="popular-price h4 mb-0">R17</div>
+                                    <div class="popular-order-btn">Order Now</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Popular Item 4 -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="product-detail.html?product=nomthandazo" class="popular-item-link text-decoration-none">
+                        <div class="card h-100 border-0 popular-item">
+                            <div class="popular-badge position-absolute top-0 end-0 m-2">⭐ BESTSELLER</div>
+                            <div class="popular-image">
+                                <img src="ORDERING/ORDERING 24.jpg" class="card-img-top" alt="NOMTHANDAZO">
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">NOMTHANDAZO</h3>
+                                <p class="card-text popular-desc">FRESH BREAD, GREENS, POLONY, SPECIAL, EGG, CHEESE, VIENNA, TANTALIZING SAUCES AND CHIPS.(EXCLUDING THE DRINK)</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="popular-price h4 mb-0">R35</div>
+                                    <div class="popular-order-btn">Order Now</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Full Menu -->
+    <section class="full-menu py-5" id="menu">
+        <div class="container">
+            <div class="section-header text-center mb-5">
+                <h2 class="section-title">FULL MENU</h2>
+                <p class="section-subtitle" style="color:yellow;">Explore our complete delicious selection</p>
+            </div>
+            
+            <!-- Menu Navigation -->
+            <ul class="nav nav-pills justify-content-center mb-5" id="menuTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="kota-tab" data-bs-toggle="tab" data-bs-target="#kota" type="button">
+                        KOTA
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="sandwiches-tab" data-bs-toggle="tab" data-bs-target="#sandwiches" type="button">
+                        <i class="fas fa-bread-slice"></i> SANDWICHES
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="burgers-tab" data-bs-toggle="tab" data-bs-target="#burgers" type="button">
+                        <i class="fas fa-hamburger"></i> BURGERS
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="extras-tab" data-bs-toggle="tab" data-bs-target="#extras" type="button">
+                        <i class="fas fa-french-fries"></i> CHIPS
+                    </button>
+                </li>
+            </ul>
+            
+            <!-- Tab Content -->
+            <div class="tab-content" id="menuTabContent">
+                <!-- KOTA Category -->
+                <div class="tab-pane fade show active" id="kota" role="tabpanel">
+                    <div class="row g-4">
+                        <!-- KOTA Item 1 -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=nix-mapha" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 8.jpg" class="card-img-top" alt="NIX MAPHA Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">NIX MAPHA</h5>
+                                            <div class="item-price">R17</div>
+                                        </div>
+                                        <p class="card-text item-desc">FRESH BREAD, GREENS, POLONY, SECRET SAUCE AND CHIPS.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- KOTA Item 2 -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=kwela-kwela" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 2.jpg" class="card-img-top" alt="KWELA KWELA Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">KWELA KWELA</h5>
+                                            <div class="item-price">R22</div>
+                                        </div>
+                                        <p class="card-text item-desc">FRESH BREAD, GREENS, POLONY, CHEESE, SECRET SAUCE AND CHIPS.(EXCLUDING THE LAYS)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Add more KOTA items here following the same pattern -->
+                        <!-- KOTA Item 3 -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=skaftin" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 10.jpg" class="card-img-top" alt="SKAFTIN Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">SKAFTIN</h5>
+                                            <div class="item-price">R25</div>
+                                        </div>
+                                        <p class="card-text item-desc">FRESH BREAD, GREENS, EGG, POLONY, SECRET SAUCE AND CHIPS.</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- KOTA Item 4 -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=sporo" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 1.jpg" class="card-img-top" alt="SPORO Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">SPORO</h5>
+                                            <div class="item-price">R27</div>
+                                        </div>
+                                        <p class="card-text item-desc">FRESH BREAD, GREENS, POLONY, VIENNA, SECRET SAUCE AND CHIPS.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- KOTA Item 5 -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=tjovitjo" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 6.jpg" class="card-img-top" alt="TJOVITJO Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">TJOVITJO</h5>
+                                            <div class="item-price">R30</div>
+                                        </div>
+                                        <p class="card-text item-desc">FRESH BREAD, GREENS, POLONY, SPECIAL, EGG, CHEESE, TANTALIZING SAUCES AND CHIPS.</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- KOTA Item 6 -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=nomthandazo" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 24.jpg" class="card-img-top" alt="NOMTHANDAZO Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">NOMTHANDAZO</h5>
+                                            <div class="item-price">R35</div>
+                                        </div>
+                                        <p class="card-text item-desc">FRESH BREAD, GREENS, POLONY, SPECIAL, EGG, CHEESE, VIENNA, TANTALIZING SAUCES AND CHIPS.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=cheeseboy" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 5.jpg" class="card-img-top" alt="CHEESEBOY Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">CHEESEBOY</h5>
+                                            <div class="item-price">R40</div>
+                                        </div>
+                                        <p class="card-text item-desc">FRESH BREAD, GREENS, POLONY, SPECIAL, EGG, CHEESE, GRILLED BACON, TANTALIZING SAUCES AND CHIPS.</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=da-ja-vu" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 7.jpg" class="card-img-top" alt="DA JA VU Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">DA JA VU</h5>
+                                            <div class="item-price">R44</div>
+                                        </div>
+                                        <p class="card-text item-desc">FRESH BREAD, GREENS, POLONY, SPECIAL, CHEESE, RUSSIAN SAUSAGE, TANTALIZING SAUCES AND CHIPS.</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=kings-of-gomora" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 21.jpg" class="card-img-top" alt="KINGS OF GOMORA Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">KINGS OF GOMORA</h5>
+                                            <div class="item-price">R47</div>
+                                        </div>
+                                        <p class="card-text item-desc">FRESH BREAD, GREENS, POLONY, SPECIAL, EGG, CHEESE, RUSSIAN SAUSAGE, TANTALIZING SAUCES AND CHIPS.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=papuka" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 26.jpg" class="card-img-top" alt="PAPUKA Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">PAPUKA</h5>
+                                            <div class="item-price">R50</div>
+                                        </div>
+                                        <p class="card-text item-desc">FRESH BREAD, GREENS, POLONY, SPECIAL, EGG, CHEESE, BEEF BURGER PATTY, TANTALIZING SAUCES AND CHIPS.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=zuumba" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 20.jpg" class="card-img-top" alt="ZUUMBA Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">ZUUMBA</h5>
+                                            <div class="item-price">R62</div>
+                                        </div>
+                                        <p class="card-text item-desc">FRESH BREAD, GREENS, POLONY, SPECIAL, EGG, CHEESE, CRISPY CHICKEN FILLET, TANTALIZING SAUCES AND CHIPS.</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=big-boss" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 19.jpg" class="card-img-top" alt="BIG BOSS Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">BIG BOSS</h5>
+                                            <div class="item-price">R85</div>
+                                        </div>
+                                        <p class="card-text item-desc">FRESH BREAD, GREENS, POLONY, SPECIAL, EGG, CHEESE, VIENNA, GRILLED BACON, RUSSIAN SAUSAGE, BEEF BURGER PATTY, TANTALIZING SAUCES AND CHIPS.</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=ugogo" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 28.jpg" class="card-img-top" alt="UGOGO UYANG THANDA Kota">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">UGOGO UYAN THANDA</h5>
+                                            <div class="item-price">R130</div>
+                                        </div>
+                                        <p class="card-text item-desc">1/2 FRESH BREAD, GREENS, POLONY, SPECIAL, EGG x2, CHEESE x2, VIENNA x2, GRILLED BACON x2, RUSSIAN SAUSAGE x2, BEEF BURGER PATTY x2, TANTALIZING SAUCES AND CHIPS.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SANDWICHES Category -->
+                <div class="tab-pane fade" id="sandwiches" role="tabpanel">
+                    <div class="row g-4">
+                        <!-- Sandwich Item 1 -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=makhelwane" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 3.jpg" class="card-img-top" alt="MAKHELWANE Sandwich">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">MAKHELWANE</h5>
+                                            <div class="item-price">R18</div>
+                                        </div>
+                                        <p class="card-text item-desc">SLICES OF TOASTED BREAD, GREENS, EGG, CHEESE AND TANTALIZING SAUCES.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Sandwich Item 2 -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=kasablanca" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 11.jpg" class="card-img-top" alt="KASABLANCA Sandwich">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">KASABLANCA</h5>
+                                            <div class="item-price">R27</div>
+                                        </div>
+                                        <p class="card-text item-desc">SLICES OF TOASTED BREAD, GREENS, EGG, CHEESE, VIENNA AND TANTALIZING SAUCES.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Add more sandwich items as needed -->
+                         <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=spongebob" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 23.jpg" class="card-img-top" alt="SPONGEBOB Sandwich">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">SPONGEBOB</h5>
+                                            <div class="item-price">R30</div>
+                                        </div>
+                                        <p class="card-text item-desc">SLICES OF TOASTED BREAD, GREENS, EGG, CHEESE, GRILLED BACON AND TANTALIZING SAUCES.</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=cool-guy" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 27.jpg" class="card-img-top" alt="COOL GUY Sandwich">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">COOL GUY</h5>
+                                            <div class="item-price">R36</div>
+                                        </div>
+                                        <p class="card-text item-desc">SLICES OF TOASTED BREAD, GREENS, EGG, CHEESE, RUSSIAN SAUSAGE AND TANTALIZING SAUCES.</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=goliath" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 22.jpg" class="card-img-top" alt="GOLIATH Sandwich">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">GOLIATH</h5>
+                                            <div class="item-price">R46</div>
+                                        </div>
+                                        <p class="card-text item-desc">3 SLICES OF TOASTED BREAD, GREENS, EGG, CHEESE, RUSSIAN SAUSAGE, VIENNA AND TANTALIZING SAUCES.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=jericho" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 16.jpg" class="card-img-top" alt="JERICHO Sandwich">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">JERICHO</h5>
+                                            <div class="item-price">R50</div>
+                                        </div>
+                                        <p class="card-text item-desc">SLICES OF TOASTED BREAD, GREENS, EGG, CHEESE, RUSSIAN SAUSAGE, GRILLED BACON  AND TANTALIZING SAUCES.</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- BURGERS Category -->
+                <div class="tab-pane fade" id="burgers" role="tabpanel">
+                    <div class="row g-4">
+                        <!-- Burger Item 1 -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=mac-buza" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 18.jpg" class="card-img-top" alt="MAC BUZA Burger">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">MAC BUZA</h5>
+                                            <div class="item-price">R43</div>
+                                        </div>
+                                        <p class="card-text item-desc">BURGER BUNS TOASTED, FRESH LETTUCE, SLICE OF ORGANIC TOMATOES, SEASONAL CUCUMBER OR PICKLED CUCUMBER, MOUTH WATERING BEEF PATTY, EGG, CHEESE AND SIDE CHIPS.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Add more burger items as needed -->
+                         <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=mac-love" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 4.jpg" class="card-img-top" alt="MAC LOVE Burger">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">MAC LOVE</h5>
+                                            <div class="item-price">R48</div>
+                                        </div>
+                                        <p class="card-text item-desc">BURGER BUNS TOASTED, FRESH LETTUCE, SLICE OF ORGANIC TOMATOES, SEASONAL CUCUMBER OR PICKLED CUCUMBER, MOUTH WATERING BEEF PATTY, EGG, CHEESE, GRILLED BACON AND SIDE CHIPS.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=kediboni" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 25.jpg" class="card-img-top" alt="KEDIBONI Burger">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">KEDIBONI</h5>
+                                            <div class="item-price">R53</div>
+                                        </div>
+                                        <p class="card-text item-desc">BURGER BUNS TOASTED, FRESH LETTUCE, SLICE OF ORGANIC TOMATOES, SEASONAL CUCUMBER OR PICKLED CUCUMBER, CRISPY FRIED CHICKEN FILLET, EGG, CHEESE, SIDE CHIPS AND ONION RINGS.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=mac-gee" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 15.jpg" class="card-img-top" alt="MAC GEE Burger">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">MAC GEE</h5>
+                                            <div class="item-price">70</div>
+                                        </div>
+                                        <p class="card-text item-desc">BURGER BUNS TOASTED, FRESH LETTUCE, SLICE OF ORGANIC TOMATOES, SEASONAL CUCUMBER OR PICKLED CUCUMBER, BEEF BURGER PATTY X2, EGG, CHEESE X2, GRILLED BACON X2, SIDE CHIPS AND ONION RINGS.(EXCLUDING THE DRINK)</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CHIPS Category -->
+                <div class="tab-pane fade" id="extras" role="tabpanel">
+                    <div class="row g-4">
+                        <!-- Chips Item 1 -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=small-chips" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 12.jpg" class="card-img-top" alt="Small Chips">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">SMALL CHIPS</h5>
+                                            <div class="item-price">R25</div>
+                                        </div>
+                                        <p class="card-text item-desc">Delicious golden fries served with our special sauce.</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Chips Item 2 -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=medium-chips" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 12.jpg" class="card-img-top" alt="Medium Chips">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">MEDIUM CHIPS</h5>
+                                            <div class="item-price">R30</div>
+                                        </div>
+                                        <p class="card-text item-desc">Delicious golden fries served with our special sauce.</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Chips Item 3 -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <a href="product-detail.html?product=large-chips" class="menu-item-link text-decoration-none">
+                                <div class="card h-100 border-0 menu-item">
+                                    <img src="ORDERING/ORDERING 12.jpg" class="card-img-top" alt="Large Chips">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">LARGE CHIPS</h5>
+                                            <div class="item-price">R40</div>
+                                        </div>
+                                        <p class="card-text item-desc">Delicious golden fries served with our special sauce.</p>
+                                        <div class="order-btn w-100">Order Now</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Opening Hours & Contact -->
+    <section class="contact-hours py-5" id="contact">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card h-100 border-0 hours-card">
+                        <div class="card-header">
+                            <i class="fas fa-clock"></i>
+                            <h3 class="d-inline ms-2">OPENING HOURS</h3>
+                        </div>
+                        <div class="hours-body">
+                            <div class="hours-list">
+                                <div class="hour-item">
+                                    <span>Monday</span>
+                                    <span>9AM - 8:30PM</span>
+                                </div>
+                                <div class="hour-item">
+                                    <span>Tuesday</span>
+                                    <span>9AM - 9:30PM</span>
+                                </div>
+                                <div class="hour-item">
+                                    <span>Wednesday</span>
+                                    <span>9AM - 9:30PM</span>
+                                </div>
+                                <div class="hour-item">
+                                    <span>Thursday</span>
+                                    <span>9AM - 9:30PM</span>
+                                </div>
+                                <div class="hour-item">
+                                    <span>Friday</span>
+                                    <span>9AM - 10:00PM</span>
+                                </div>
+                                <div class="hour-item">
+                                    <span>Saturday</span>
+                                    <span>9AM - 10:30PM</span>
+                                </div>
+                                <div class="hour-item closed">
+                                    <span>Sunday</span>
+                                    <span>Closed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="card h-100 border-0 location-card">
+                        <div class="card-header">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <h3 class="d-inline ms-2">FIND US</h3>
+                        </div>
+                        <div class="location-body">
+                            <div class="location-info">
+                                <p><i class="fas fa-location-dot"></i> 232 Far East Bank, Sandton, 2014</p>
+                                <p><i class="fas fa-phone"></i> +27 83 967 9365</p>
+                                <p><i class="fas fa-envelope"></i> kodijong32@gmail.com</p>
+                            </div>
+                            <div class="location-note mt-4">
+                                <i class="fas fa-info-circle"></i>
+                                <p class="mb-0" style="color: var(--pure-white);">We accept orders via WhatsApp and phone calls</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <h3>KODIJONG</h3>
+                        <div class="social-links d-flex gap-2 mt-3">
+                            <a href="https://www.facebook.com/p/Kodijong-100064306443083/" 
+                            class="social-link facebook" 
+                            aria-label="Follow us on Facebook"
+                            target="_blank" 
+                            rel="noopener noreferrer">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="https://www.instagram.com/kodijongkota/" 
+                            class="social-link instagram" 
+                            aria-label="Follow us on Instagram"
+                            target="_blank" 
+                            rel="noopener noreferrer">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://www.tiktok.com/@kodijong_" 
+                            class="social-link tiktok" 
+                            aria-label="Follow us on TikTok"
+                            target="_blank" 
+                            rel="noopener noreferrer">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="footer-links">
+                        <h4>Quick Links</h4>
+                        <a href="#home" class="d-block mb-2">Home</a>
+                        <a href="#popular" class="d-block mb-2">Popular Items</a>
+                        <a href="#menu" class="d-block mb-2">Full Menu</a>
+                        <a href="#contact" class="d-block">Contact</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="footer-contact">
+                        <h4>Order Now</h4>
+                        <p><i class="fas fa-phone"></i> +27 83 967 9365</p>
+                        <p><i class="fab fa-whatsapp"></i> WhatsApp Order</p>
+                        <p><i class="fas fa-clock"></i> Open Mon-Sat</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom text-center mt-5 pt-4 border-top">
+                <p>&copy; 2026 KODIJONG THE FOOD HUB. All rights reserved.</p>
+                <p>Made with ❤️ in the heart of Kasi</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Cart Button -->
+    <button class="floating-cart-btn" id="floatingCartBtn">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-badge" id="floatingCartCount">0</span>
+    </button>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>Your Shopping Cart</h2>
+            <button class="close-btn" id="close-cart">&times;</button>
+        </div>
+        
+        <div class="cart-body">
+            <ul id="order-list"></ul>
+            <p class="mt-3"><b style="color: white;">Total:</b> <span id="total-price">0.00</span></p>
+            
+            <form id="order-form" class="mt-3">
+                <div class="mb-3">
+                    <label for="customer-name" class="form-label">Name:</label>
+                    <input type="text" class="form-control" id="customer-name" placeholder="Your Name" required />
+                </div>
+                <div class="mb-3">
+                    <label for="customer-phone" class="form-label">Phone Number:</label>
+                    <input type="tel" class="form-control" id="customer-phone" placeholder="Your Phone Number" required />
+                </div>
+                <div class="mb-3">
+                    <label for="special-instructions" class="form-label">Special Instructions / Custom Order:</label>
+                    <textarea class="form-control" id="special-instructions" rows="4" placeholder="Any special requests or order details..."></textarea>
+                </div>
+            </form>
+        </div>
+        
+        <div class="cart-footer">
+            <a id="whatsapp-btn" class="cta" target="_blank" rel="noopener noreferrer">Send Order on WhatsApp</a>
+        </div>
+    </div>
+    
+    <!-- Backdrop for mobile -->
+    <div class="backdrop" id="backdrop"></div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
