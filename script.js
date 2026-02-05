@@ -226,6 +226,8 @@ const CartManager = {
     
     // WhatsApp order with optimizations
     sendWhatsAppOrder: function() {
+        console.log('sendWhatsAppOrder called');
+        
         // Early return if cart empty
         const cart = this.getCart();
         if (cart.length === 0) {
@@ -233,20 +235,57 @@ const CartManager = {
             return false;
         }
         
-        // Get form values
-        const nameInput = document.getElementById('customer-name');
-        const phoneInput = document.getElementById('customer-phone');
-        const instructionsInput = document.getElementById('special-instructions');
+        // Debug: Log all input fields
+        console.log('All input fields on page:');
+        document.querySelectorAll('input, textarea').forEach(input => {
+            console.log(`- ${input.id || input.name || 'no-id'}: type="${input.type}", value="${input.value}"`);
+        });
+        
+        // Get form values with multiple fallback options
+        const nameInput = document.getElementById('customer-name') || 
+                         document.querySelector('input[placeholder*="name" i], input[placeholder*="Name" i]') ||
+                         document.querySelector('input[name="name"]') ||
+                         document.querySelector('#name');
+        
+        const phoneInput = document.getElementById('customer-phone') || 
+                          document.querySelector('input[placeholder*="phone" i], input[placeholder*="Phone" i]') ||
+                          document.querySelector('input[type="tel"]') ||
+                          document.querySelector('input[name="phone"]') ||
+                          document.querySelector('#phone');
+        
+        const instructionsInput = document.getElementById('special-instructions') || 
+                                 document.querySelector('textarea[placeholder*="instructions" i]') ||
+                                 document.querySelector('textarea[name="instructions"]');
+        
+        console.log('Name input found:', nameInput);
+        console.log('Phone input found:', phoneInput);
+        console.log('Instructions input found:', instructionsInput);
         
         const name = nameInput?.value.trim() || '';
         const phone = phoneInput?.value.trim() || '';
         const instructions = instructionsInput?.value.trim() || '';
         
+        console.log('Name:', name, 'Phone:', phone);
+        
         // Validate inputs
         if (!name || !phone) {
             this.showNotification('Please enter your name and phone number', 'error');
+            
+            // Highlight empty fields
+            if (!name && nameInput) {
+                nameInput.style.border = '2px solid red';
+                nameInput.focus();
+            } else if (!phone && phoneInput) {
+                phoneInput.style.border = '2px solid red';
+                if (name) phoneInput.focus();
+            }
+            
             return false;
         }
+        
+        // Clear any error highlighting
+        if (nameInput) nameInput.style.border = '';
+        if (phoneInput) phoneInput.style.border = '';
         
         // Phone validation
         const phoneRegex = /^(\+27|0)[1-9]\d{8}$/;
@@ -254,6 +293,10 @@ const CartManager = {
         
         if (!phoneRegex.test(cleanedPhone)) {
             this.showNotification('Please enter a valid South African phone number', 'error');
+            if (phoneInput) {
+                phoneInput.style.border = '2px solid red';
+                phoneInput.focus();
+            }
             return false;
         }
         
@@ -361,22 +404,29 @@ const CartManager = {
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/${businessPhone}?text=${encodedMessage}`;
         
+        console.log('Opening WhatsApp URL:', whatsappUrl);
+        
         // Open WhatsApp
         try {
-            const newWindow = window.open(whatsappUrl, '_blank');
-            if (!newWindow) {
-                this.showNotification('Please allow pop-ups to send the order', 'error');
-                return false;
+            const newWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+            if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                // Fallback: Try to open in same window if popup blocked
+                window.location.href = whatsappUrl;
+                setTimeout(() => {
+                    this.showNotification('Please allow pop-ups or click the link manually', 'error');
+                }, 1000);
             }
         } catch (error) {
-            this.showNotification('Could not open WhatsApp', 'error');
-            return false;
+            console.error('Error opening WhatsApp:', error);
+            // Direct fallback
+            window.location.href = whatsappUrl;
         }
         
         // Clear cart and form
         this.saveCart([]);
         this._updateCartCountImmediate();
         
+        // Clear form fields
         if (nameInput) nameInput.value = '';
         if (phoneInput) phoneInput.value = '';
         if (instructionsInput) instructionsInput.value = '';
@@ -390,12 +440,62 @@ const CartManager = {
 window.CartManager = CartManager;
 
 // ============================================
+// UNIVERSAL WHATSAPP BUTTON HANDLER
+// ============================================
+
+function initWhatsAppButton() {
+    const whatsappBtn = document.getElementById('whatsapp-btn');
+    
+    if (whatsappBtn) {
+        console.log('WhatsApp button found, attaching event listener');
+        
+        // Remove any existing listeners
+        const newBtn = whatsappBtn.cloneNode(true);
+        whatsappBtn.parentNode.replaceChild(newBtn, whatsappBtn);
+        
+        // Add click event listener
+        newBtn.addEventListener('click', function(e) {
+            console.log('WhatsApp button clicked');
+            e.preventDefault();
+            e.stopPropagation();
+            
+            try {
+                const result = CartManager.sendWhatsAppOrder();
+                console.log('sendWhatsAppOrder result:', result);
+            } catch (error) {
+                console.error('Error in WhatsApp button handler:', error);
+                CartManager.showNotification('Error processing order. Please try again.', 'error');
+            }
+            
+            return false;
+        });
+        
+        // Also handle Enter key on form fields
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && (e.target.matches('#customer-name, #customer-phone, #special-instructions') ||
+                                      e.target.matches('input[placeholder*="name" i], input[placeholder*="phone" i]'))) {
+                e.preventDefault();
+                const result = CartManager.sendWhatsAppOrder();
+                console.log('Enter key triggered sendWhatsAppOrder:', result);
+            }
+        });
+        
+    } else {
+        console.warn('WhatsApp button not found (id="whatsapp-btn")');
+        // Try again after a delay in case button loads dynamically
+        setTimeout(initWhatsAppButton, 1000);
+    }
+}
+
+// ============================================
 // MAIN PAGE LOGIC (index.html)
 // ============================================
 
 if (document.querySelector('.hero')) {
     // Performance optimized main page
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('Main page loaded');
+        
         // Use passive event listeners for better scrolling performance
         const passiveOptions = { passive: true };
         const activeOptions = { passive: false };
@@ -558,18 +658,8 @@ if (document.querySelector('.hero')) {
         if (elements.closeCartBtn) elements.closeCartBtn.addEventListener('click', cartControls.close);
         if (elements.backdrop) elements.backdrop.addEventListener('click', cartControls.close);
         
-        // ========== OPTIMIZED WHATSAPP ==========
-        if (elements.whatsappBtn) {
-            elements.whatsappBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const result = CartManager.sendWhatsAppOrder();
-                if (result) {
-                    updateCartDisplay();
-                    cartControls.close();
-                    scrollPositions.save();
-                }
-            });
-        }
+        // ========== INITIALIZE WHATSAPP BUTTON ==========
+        initWhatsAppButton();
         
         // ========== OPTIMIZED TAB HANDLING ==========
         if (elements.menuTabs.length > 0) {
@@ -719,6 +809,8 @@ if (document.querySelector('.hero')) {
 if (document.querySelector('.product-detail')) {
     // Performance optimized product page
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('Product detail page loaded');
+        
         // ========== PRODUCT DATA ==========
         const products = {
             'big-boss': {
@@ -819,7 +911,7 @@ if (document.querySelector('.product-detail')) {
             },
             'makhelwane': {
                 name: 'MAKHELWANE',
-                description: 'SLICES OF TOASTED BREAD, GREENS, EGG, CHEESE AND TANTALIZING SAUCES.(EXCLUDING THE DRINK)',
+                description: 'SLICES OF TOASTED BREAD, GREENS, EGG, CHEESE AND TANTALIZING SAUCES.(EXCLUDING THE DRink)',
                 price: 18,
                 image: 'ORDERING/ORDERING 3.jpg'
             },
@@ -1404,6 +1496,9 @@ if (document.querySelector('.product-detail')) {
         if (elements.closeCartBtn) elements.closeCartBtn.addEventListener('click', closeCart);
         if (elements.backdrop) elements.backdrop.addEventListener('click', closeCart);
         
+        // ========== INITIALIZE WHATSAPP BUTTON ==========
+        initWhatsAppButton();
+        
         // ========== INITIALIZE ==========
         loadProduct();
         setupQuantityControls();
@@ -1640,8 +1735,24 @@ if (!document.querySelector('#kodijong-styles')) {
             color: var(--pure-white) !important;
         }
         
-        /* Responsive fixes for mobile */
+        /* Mobile optimizations */
         @media (max-width: 768px) {
+            .notification {
+                top: 70px;
+                right: 10px;
+                max-width: calc(100% - 20px);
+                min-width: auto;
+                font-size: 14px;
+                padding: 12px 15px;
+            }
+            
+            .cart-item-image {
+                width: 50px;
+                height: 50px;
+                min-width: 50px;
+            }
+            
+            /* Responsive fixes for mobile */
             .extra-option,
             .drink-option {
                 flex-direction: column !important;
@@ -1847,28 +1958,101 @@ if (!document.querySelector('#kodijong-styles')) {
             animation: iconPulse 2s infinite alternate;
         }
         
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            .notification {
-                top: 70px;
-                right: 10px;
-                max-width: calc(100% - 20px);
-                min-width: auto;
-                font-size: 14px;
-                padding: 12px 15px;
-            }
-            
-            .cart-item-image {
-                width: 50px;
-                height: 50px;
-                min-width: 50px;
-            }
+        /* WhatsApp button specific styles */
+        #whatsapp-btn {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        #whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+        
+        #whatsapp-btn:active {
+            transform: translateY(0);
+        }
+        
+        #whatsapp-btn i {
+            font-size: 20px;
         }
     `;
     document.head.appendChild(style);
 }
 
-// Initialize cart count on all pages
+// ============================================
+// UNIVERSAL INITIALIZATION
+// ============================================
+
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded, initializing CartManager');
+    
+    // Initialize cart count
     CartManager.updateCartCount();
+    
+    // Initialize WhatsApp button
+    initWhatsAppButton();
+    
+    // Also try initialization after page fully loads
+    window.addEventListener('load', function() {
+        console.log('Page fully loaded, re-initializing WhatsApp button');
+        setTimeout(initWhatsAppButton, 500);
+    });
 });
+
+// Fallback: Try initializing WhatsApp button every 2 seconds for 10 seconds
+let initAttempts = 0;
+const maxInitAttempts = 5;
+const initInterval = setInterval(() => {
+    if (document.getElementById('whatsapp-btn')) {
+        console.log('WhatsApp button found via fallback interval');
+        initWhatsAppButton();
+        clearInterval(initInterval);
+    } else if (initAttempts >= maxInitAttempts) {
+        console.warn('WhatsApp button not found after multiple attempts');
+        clearInterval(initInterval);
+    }
+    initAttempts++;
+}, 2000);
+
+// ============================================
+// DEBUG HELPER FUNCTIONS
+// ============================================
+
+// Add debug helper to window for testing
+window.debugCart = function() {
+    console.log('=== CART DEBUG INFO ===');
+    console.log('Cart contents:', CartManager.getCart());
+    console.log('Cart count:', CartManager.getCart().reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0));
+    console.log('WhatsApp button:', document.getElementById('whatsapp-btn'));
+    console.log('Form fields:');
+    console.log('- Name:', document.getElementById('customer-name')?.value);
+    console.log('- Phone:', document.getElementById('customer-phone')?.value);
+    console.log('=== END DEBUG ===');
+};
+
+// Test function for WhatsApp button
+window.testWhatsApp = function() {
+    console.log('=== TESTING WHATSAPP BUTTON ===');
+    const btn = document.getElementById('whatsapp-btn');
+    if (btn) {
+        console.log('Button found, simulating click');
+        btn.click();
+    } else {
+        console.error('Button not found!');
+    }
+};
