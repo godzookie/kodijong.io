@@ -914,19 +914,26 @@ if (document.querySelector('.product-detail')) {
             const sauceRadios = document.querySelectorAll('input[name="sauce"]');
             const customSaucesDiv = document.getElementById('customSauces');
             
+            if (!sauceRadios.length || !customSaucesDiv) return;
+            
+            // Initialize sauce selection
+            sauceRadios.forEach(radio => {
+                if (radio.value === 'Custom' && radio.checked) {
+                    customSaucesDiv.classList.add('show');
+                }
+            });
+            
             // Add event listeners to sauce radio buttons
             sauceRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
-                    if (customSaucesDiv) {
-                        if (this.value === 'Custom') {
-                            customSaucesDiv.classList.add('show');
-                        } else {
-                            customSaucesDiv.classList.remove('show');
-                            // Uncheck all custom sauce checkboxes when not in custom mode
-                            document.querySelectorAll('input[name="custom-sauce"]').forEach(cb => {
-                                cb.checked = false;
-                            });
-                        }
+                    if (this.value === 'Custom') {
+                        customSaucesDiv.classList.add('show');
+                    } else {
+                        customSaucesDiv.classList.remove('show');
+                        // Uncheck all custom sauce checkboxes when not in custom mode
+                        document.querySelectorAll('input[name="custom-sauce"]').forEach(cb => {
+                            cb.checked = false;
+                        });
                     }
                 });
             });
@@ -997,110 +1004,150 @@ if (document.querySelector('.product-detail')) {
             updateTotalDisplay();
         }
         
-        // ========== OPTIMIZED PRODUCT CONTROLS ==========
-        // Single event delegation for all product controls
-        document.addEventListener('click', function(e) {
-            const target = e.target;
+        // ========== FIXED: QUANTITY CONTROLS ==========
+        function setupQuantityControls() {
+            const qtyMinus = document.querySelector('.qty-minus');
+            const qtyPlus = document.querySelector('.qty-plus');
+            const quantityInput = elements.quantityInput;
             
-            // Quantity controls
-            if (target === elements.qtyMinus || target === elements.qtyPlus) {
-                e.preventDefault();
-                const isPlus = target === elements.qtyPlus;
+            if (qtyMinus && qtyPlus && quantityInput) {
+                qtyMinus.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (currentQuantity > 1) {
+                        currentQuantity--;
+                        quantityInput.value = currentQuantity;
+                        updateTotalDisplay();
+                    }
+                });
                 
-                if (isPlus && currentQuantity < 10) {
-                    currentQuantity++;
-                } else if (!isPlus && currentQuantity > 1) {
-                    currentQuantity--;
-                }
+                qtyPlus.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (currentQuantity < 10) {
+                        currentQuantity++;
+                        quantityInput.value = currentQuantity;
+                        updateTotalDisplay();
+                    }
+                });
                 
-                if (elements.quantityInput) {
-                    elements.quantityInput.value = currentQuantity;
+                quantityInput.addEventListener('input', function() {
+                    let value = parseInt(this.value, 10);
+                    if (isNaN(value) || value < 1) value = 1;
+                    if (value > 10) value = 10;
+                    currentQuantity = value;
+                    this.value = value;
                     updateTotalDisplay();
-                }
-                return;
+                });
             }
-            
-            // Extra controls
-            if (target.classList.contains('extra-plus') || target.classList.contains('extra-minus')) {
-                e.preventDefault();
-                const name = target.dataset.name;
-                const price = parseFloat(target.dataset.price || 0);
-                const input = document.querySelector(`.extra-qty[data-name="${name}"]`);
-                if (!input) return;
-                
-                let value = parseInt(input.value, 10) || 0;
-                const isPlus = target.classList.contains('extra-plus');
-                
-                if (isPlus && value < 10) {
-                    value++;
-                } else if (!isPlus && value > 0) {
-                    value--;
-                }
-                
-                input.value = value;
-                updateExtra(name, price, value);
-                return;
-            }
-            
-            // Drink controls
-            if (target.classList.contains('drink-plus') || target.classList.contains('drink-minus')) {
-                e.preventDefault();
-                const name = target.dataset.name;
-                const price = parseFloat(target.dataset.price || 0);
-                const input = document.querySelector(`.drink-qty[data-name="${name}"]`);
-                if (!input) return;
-                
-                let value = parseInt(input.value, 10) || 0;
-                const isPlus = target.classList.contains('drink-plus');
-                
-                if (isPlus && value < 10) {
-                    value++;
-                } else if (!isPlus && value > 0) {
-                    value--;
-                }
-                
-                input.value = value;
-                updateDrink(name, price, value);
-            }
-        });
+        }
         
-        // Single input handler
-        document.addEventListener('input', function(e) {
-            const target = e.target;
-            
-            if (target.classList.contains('extra-qty')) {
-                const name = target.dataset.name;
-                const price = parseFloat(target.dataset.price || 0);
-                let value = parseInt(target.value, 10) || 0;
-                if (value < 0) value = 0;
-                if (value > 10) value = 10;
-                target.value = value;
+        // ========== FIXED: EXTRAS AND DRINKS CONTROLS FOR YOUR HTML STRUCTURE ==========
+        function setupExtrasAndDrinksControls() {
+            // Event delegation for extras
+            document.addEventListener('click', function(e) {
+                // Extra controls
+                if (e.target.classList.contains('extra-minus')) {
+                    e.preventDefault();
+                    const extraOption = e.target.closest('.extra-option');
+                    if (!extraOption) return;
+                    
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price || 0);
+                    const input = extraOption.querySelector('.extra-qty');
+                    if (!input) return;
+                    
+                    let value = parseInt(input.value, 10) || 0;
+                    if (value > 0) {
+                        value--;
+                        input.value = value;
+                        updateExtra(name, price, value);
+                    }
+                    return;
+                }
                 
-                updateExtra(name, price, value);
-                return;
-            }
-            
-            if (target.classList.contains('drink-qty')) {
-                const name = target.dataset.name;
-                const price = parseFloat(target.dataset.price || 0);
-                let value = parseInt(target.value, 10) || 0;
-                if (value < 0) value = 0;
-                if (value > 10) value = 10;
-                target.value = value;
+                if (e.target.classList.contains('extra-plus')) {
+                    e.preventDefault();
+                    const extraOption = e.target.closest('.extra-option');
+                    if (!extraOption) return;
+                    
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price || 0);
+                    const input = extraOption.querySelector('.extra-qty');
+                    if (!input) return;
+                    
+                    let value = parseInt(input.value, 10) || 0;
+                    if (value < 10) {
+                        value++;
+                        input.value = value;
+                        updateExtra(name, price, value);
+                    }
+                    return;
+                }
                 
-                updateDrink(name, price, value);
-                return;
-            }
+                // Drink controls
+                if (e.target.classList.contains('drink-minus')) {
+                    e.preventDefault();
+                    const drinkOption = e.target.closest('.drink-option');
+                    if (!drinkOption) return;
+                    
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price || 0);
+                    const input = drinkOption.querySelector('.drink-qty');
+                    if (!input) return;
+                    
+                    let value = parseInt(input.value, 10) || 0;
+                    if (value > 0) {
+                        value--;
+                        input.value = value;
+                        updateDrink(name, price, value);
+                    }
+                    return;
+                }
+                
+                if (e.target.classList.contains('drink-plus')) {
+                    e.preventDefault();
+                    const drinkOption = e.target.closest('.drink-option');
+                    if (!drinkOption) return;
+                    
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price || 0);
+                    const input = drinkOption.querySelector('.drink-qty');
+                    if (!input) return;
+                    
+                    let value = parseInt(input.value, 10) || 0;
+                    if (value < 10) {
+                        value++;
+                        input.value = value;
+                        updateDrink(name, price, value);
+                    }
+                }
+            });
             
-            if (target === elements.quantityInput) {
-                let value = parseInt(target.value, 10);
-                if (isNaN(value) || value < 1) value = 1;
-                if (value > 10) value = 10;
-                currentQuantity = value;
-                target.value = value;
-                updateTotalDisplay();
-            }
-        });
+            // Input handlers for extras and drinks
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('extra-qty')) {
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price || 0);
+                    let value = parseInt(e.target.value, 10) || 0;
+                    if (value < 0) value = 0;
+                    if (value > 10) value = 10;
+                    e.target.value = value;
+                    
+                    updateExtra(name, price, value);
+                    return;
+                }
+                
+                if (e.target.classList.contains('drink-qty')) {
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price || 0);
+                    let value = parseInt(e.target.value, 10) || 0;
+                    if (value < 0) value = 0;
+                    if (value > 10) value = 10;
+                    e.target.value = value;
+                    
+                    updateDrink(name, price, value);
+                }
+            });
+        }
         
         // Optimized extra/drink updates
         function updateExtra(name, price, quantity) {
@@ -1359,6 +1406,8 @@ if (document.querySelector('.product-detail')) {
         
         // ========== INITIALIZE ==========
         loadProduct();
+        setupQuantityControls();
+        setupExtrasAndDrinksControls();
         CartManager.updateCartCount();
         updateCartDisplay();
         
@@ -1511,6 +1560,291 @@ if (!document.querySelector('#kodijong-styles')) {
             transition: all 0.2s ease;
             flex-shrink: 0;
             margin-left: 10px;
+        }
+        
+        /* FIXED: Responsive extras and drinks for your HTML structure */
+        .extras-list,
+        .drinks-list {
+            margin-top: var(--space-md);
+        }
+        
+        .extra-option,
+        .drink-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 215, 0, 0.1);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            transition: var(--transition-base);
+        }
+        
+        .extra-option:hover,
+        .drink-option:hover {
+            background: rgba(255,215,0,0.1);
+            border-color: var(--gold-yellow);
+        }
+        
+        .option-details {
+            flex: 1;
+            min-width: 0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .extra-name,
+        .drink-name {
+            display: block;
+            font-weight: 600;
+            color: var(--pure-white);
+            font-size: 0.95rem;
+            line-height: 1.3;
+            margin-bottom: 0.25rem;
+        }
+        
+        .extra-price,
+        .drink-price {
+            display: block;
+            color: var(--gold-yellow);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        
+        .option-controls {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        
+        /* Make buttons more touch-friendly on mobile */
+        .extra-minus,
+        .extra-plus,
+        .drink-minus,
+        .drink-plus {
+            min-width: 36px !important;
+            min-height: 36px !important;
+            padding: 0.25rem 0.5rem !important;
+            font-size: 0.9rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        
+        .extra-qty,
+        .drink-qty {
+            width: 50px !important;
+            min-height: 36px !important;
+            padding: 0.25rem !important;
+            font-size: 0.9rem !important;
+            text-align: center !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            border-color: var(--gold-yellow) !important;
+            color: var(--pure-white) !important;
+        }
+        
+        /* Responsive fixes for mobile */
+        @media (max-width: 768px) {
+            .extra-option,
+            .drink-option {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding: 0.75rem;
+            }
+            
+            .option-details {
+                width: 100%;
+                margin-bottom: 0.75rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .extra-name,
+            .drink-name {
+                display: inline-block;
+                margin-bottom: 0;
+                font-size: 0.9rem;
+                max-width: 60%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            .extra-price,
+            .drink-price {
+                display: inline-block;
+                font-size: 0.9rem;
+                text-align: right;
+                flex-shrink: 0;
+            }
+            
+            .option-controls {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .extra-minus,
+            .extra-plus,
+            .drink-minus,
+            .drink-plus {
+                min-width: 42px !important;
+                min-height: 42px !important;
+                padding: 0.5rem !important;
+                font-size: 1rem !important;
+            }
+            
+            .extra-qty,
+            .drink-qty {
+                width: 60px !important;
+                min-height: 42px !important;
+                margin: 0 0.5rem !important;
+                font-size: 1rem !important;
+            }
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 576px) {
+            .extra-option,
+            .drink-option {
+                padding: 0.5rem;
+            }
+            
+            .extra-name,
+            .drink-name {
+                font-size: 0.85rem;
+                max-width: 55%;
+            }
+            
+            .extra-price,
+            .drink-price {
+                font-size: 0.85rem;
+            }
+            
+            .extra-minus,
+            .extra-plus,
+            .drink-minus,
+            .drink-plus {
+                min-width: 38px !important;
+                min-height: 38px !important;
+                padding: 0.4rem !important;
+            }
+            
+            .extra-qty,
+            .drink-qty {
+                width: 50px !important;
+                min-height: 38px !important;
+                margin: 0 0.25rem !important;
+            }
+            
+            /* For very long drink names */
+            .drink-name {
+                max-width: 50%;
+            }
+        }
+        
+        /* For long drink names on all screens */
+        .drink-name {
+            word-break: break-word;
+            white-space: normal;
+            line-height: 1.2;
+        }
+        
+        @media (min-width: 769px) {
+            .extra-option,
+            .drink-option {
+                padding: 0.75rem 1rem;
+            }
+            
+            .option-details {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 0;
+            }
+            
+            .extra-name,
+            .drink-name {
+                flex: 1;
+                margin-bottom: 0;
+                margin-right: 1rem;
+            }
+            
+            .extra-price,
+            .drink-price {
+                flex-shrink: 0;
+                text-align: right;
+                min-width: 60px;
+            }
+            
+            .option-controls {
+                flex-shrink: 0;
+            }
+        }
+        
+        /* Make sure the buttons don't get too small on desktop */
+        @media (min-width: 992px) {
+            .extra-minus,
+            .extra-plus,
+            .drink-minus,
+            .drink-plus {
+                min-width: 40px !important;
+                min-height: 40px !important;
+            }
+            
+            .extra-qty,
+            .drink-qty {
+                width: 60px !important;
+                min-height: 40px !important;
+            }
+        }
+        
+        /* Improve spacing between items */
+        .extras-list .extra-option:last-child,
+        .drinks-list .drink-option:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Hover effects for better UX */
+        .extra-minus:hover,
+        .extra-plus:hover,
+        .drink-minus:hover,
+        .drink-plus:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .extra-qty:focus,
+        .drink-qty:focus {
+            outline: 2px solid var(--gold-yellow);
+            outline-offset: 2px;
+        }
+        
+        /* Animation for quantity changes */
+        .extra-qty,
+        .drink-qty {
+            transition: all 0.2s ease;
+        }
+        
+        .extra-minus:active,
+        .extra-plus:active,
+        .drink-minus:active,
+        .drink-plus:active {
+            transform: scale(0.95);
+        }
+        
+        /* Ensure proper contrast for readability */
+        .extras-list h4,
+        .drinks-list h4 {
+            color: var(--gold-yellow);
+            font-size: 1.2rem;
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .extras-list h4 i,
+        .drinks-list h4 i {
+            color: var(--fire-red);
+            animation: iconPulse 2s infinite alternate;
         }
         
         /* Mobile optimizations */
